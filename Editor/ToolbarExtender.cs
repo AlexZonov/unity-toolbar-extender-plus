@@ -4,10 +4,10 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace UnityToolbarExtender
+namespace com.flexford.packages.toolbar
 {
 	[InitializeOnLoad]
-	public static class ToolbarExtender
+	internal static class ToolbarExtender
 	{
 		static int m_toolCount;
 		static GUIStyle m_commandStyle = null;
@@ -18,16 +18,15 @@ namespace UnityToolbarExtender
 		static ToolbarExtender()
 		{
 			Type toolbarType = typeof(Editor).Assembly.GetType("UnityEditor.Toolbar");
-			
+
 #if UNITY_2019_1_OR_NEWER
 			string fieldName = "k_ToolCount";
 #else
 			string fieldName = "s_ShownToolIcons";
 #endif
-			
-			FieldInfo toolIcons = toolbarType.GetField(fieldName,
-				BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
-			
+
+			FieldInfo toolIcons = toolbarType.GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+
 #if UNITY_2019_3_OR_NEWER
 			m_toolCount = toolIcons != null ? ((int) toolIcons.GetValue(null)) : 8;
 #elif UNITY_2019_1_OR_NEWER
@@ -37,7 +36,7 @@ namespace UnityToolbarExtender
 #else
 			m_toolCount = toolIcons != null ? ((Array) toolIcons.GetValue(null)).Length : 5;
 #endif
-	
+
 			ToolbarCallback.OnToolbarGUI = OnGUI;
 			ToolbarCallback.OnToolbarGUILeft = GUILeft;
 			ToolbarCallback.OnToolbarGUIRight = GUIRight;
@@ -48,9 +47,11 @@ namespace UnityToolbarExtender
 #else
 		public const float space = 10;
 #endif
+
 		public const float largeSpace = 20;
 		public const float buttonWidth = 32;
 		public const float dropdownWidth = 80;
+
 #if UNITY_2019_1_OR_NEWER
 		public const float playPauseStopWidth = 140;
 #else
@@ -147,8 +148,9 @@ namespace UnityToolbarExtender
 				GUILayout.EndArea();
 			}
 		}
-		
-		public static void GUILeft() {
+
+		public static void GUILeft()
+		{
 			GUILayout.BeginHorizontal();
 			foreach (var handler in LeftToolbarGUI)
 			{
@@ -156,8 +158,9 @@ namespace UnityToolbarExtender
 			}
 			GUILayout.EndHorizontal();
 		}
-		
-		public static void GUIRight() {
+
+		public static void GUIRight()
+		{
 			GUILayout.BeginHorizontal();
 			foreach (var handler in RightToolbarGUI)
 			{
